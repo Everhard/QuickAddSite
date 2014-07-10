@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+echo -n "Please enter domain: "
+read DOMAIN
+
+echo -n "Do you really want to add $DOMAIN to the server? Enter (yes/no): "
+read CONFIRM
+
+if [[ "$CONFIRM" != "yes" ]]
+then
+exit
+fi
+
+# Root privileges check:
+#...
+
+# Check if folders exists:
+#...
+
+#Check if user exists:
+#...
+
+adduser $DOMAIN
+echo "Setting password for $DOMAIN..."
+passwd $DOMAIN
+
+echo "<VirtualHost *:80>
+    AssignUserId $DOMAIN $DOMAIN
+    ServerAdmin webmaster@$DOMAIN
+    DocumentRoot /home/$DOMAIN/website
+    ServerName $DOMAIN
+    ServerAlias www.$DOMAIN
+    ErrorLog logs/$DOMAIN/error_log
+    CustomLog logs/$DOMAIN/access_log common
+</VirtualHost>" > /etc/httpd/vhosts/$DOMAIN
+
+mkdir /home/$DOMAIN/website /var/log/httpd/$DOMAIN
+touch /var/log/httpd/$DOMAIN/error_log /var/log/httpd/$DOMAIN/access_log
+
+echo "<html>
+<head><title>Works!</title></head>
+<body>
+    <h1>$DOMAIN works!</h1>
+    <p>Site created $(date +%d.%m.%Y).</p>
+</body>
+</html>" > /home/$DOMAIN/website/index.html
+
+chown $DOMAIN:$DOMAIN /home/$DOMAIN/website -R
+usermod -a -G apache $DOMAIN
