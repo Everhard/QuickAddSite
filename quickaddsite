@@ -21,7 +21,6 @@ fi
 #...
 
 adduser $DOMAIN
-echo "Setting password for $DOMAIN..."
 passwd $DOMAIN
 
 echo "<VirtualHost *:80>
@@ -47,3 +46,5 @@ echo "<html>
 
 chown $DOMAIN:$DOMAIN /home/$DOMAIN/website -R
 usermod -a -G apache $DOMAIN
+
+echo "Finished!"
