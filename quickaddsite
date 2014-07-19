@@ -47,4 +47,12 @@ echo "<html>
 chown $DOMAIN:$DOMAIN /home/$DOMAIN/website -R
 usermod -a -G apache $DOMAIN
 
+echo -n "Restart Apache? (y/n): "
+read CONFIRM
+
+if [[ "$CONFIRM" = "y" ]]
+then
+service httpd restart
+fi
+
 echo "Finished!"
